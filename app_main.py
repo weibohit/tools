@@ -5,7 +5,7 @@ from flask import request
 import optparse
 import os
 import sys
-from utility.log import InitLogging 
+from utility.log import InitLogging
 from utility.log import VLOG
 from utility.server_info import ServerInfo
 
@@ -36,7 +36,7 @@ def faq_page():
   return render_template('faq.html')
 
 @app.route('/home.html')
-def about_page():
+def home_page():
   return render_template('home.html')
 
 @app.route('/release.html')
@@ -103,9 +103,8 @@ def main(argv):
             os.remove(rootdir + "/" + item)
           except:
             pass
-  
+
   sys.exit(0)
 
 if __name__ == '__main__':
   main(sys.argv)
-

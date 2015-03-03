@@ -18,7 +18,7 @@ WARNING = 2
 ERROR = 3
 CRITICAL = 4
 
-""" InitLogging should only be invoked on main thread, aka before the http handler, 
+""" InitLogging should only be invoked on main thread, aka before the http handler,
 and we only use one true logger whose name is set by "DEFAULT_LOGGER_NAME", wherever
 need a log you just call VLOG(), the only logger is global scoped """
 def InitLogging(opts):
@@ -54,7 +54,7 @@ def InitLogging(opts):
     fh.setFormatter(g_formatter)
     logger.addHandler(fh)
 
-  # we direct the log information to stdout 
+  # we direct the log information to stdout
   ch = logging.StreamHandler(sys.__stdout__)
   ch.setLevel(g_level)
   ch.setFormatter(g_formatter)
@@ -68,11 +68,11 @@ def VLOG(level, msg):
     logger.debug('\033[1;34m' + msg + '\033[1;0m')
   elif level == INFO:
     logger.info('\033[1;35m' + msg + '\033[1;0m')
-  elif level == WARNING: 
+  elif level == WARNING:
     logger.warning('\033[1;31m' + msg + '\033[1;0m')
-  elif level == ERROR: 
+  elif level == ERROR:
     logger.error('\033[1;31m' + msg + '\033[1;0m')
-  elif level == CRITICAL: 
+  elif level == CRITICAL:
     logger.critical('\033[1;31m' + msg + '\033[1;0m')
   else:
     logger.debug('\033[1;34m' + msg + '\033[1;0m')
