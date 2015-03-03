@@ -2,4 +2,112 @@
 {% block title %}Faq{% endblock %}
 
 {% block body %}
+<article>
+  <h1 class="entry-title"><a href="./faq.html">Frequently asked questions</a></h1> 
+  <footer class="post-info">
+  <abbr class="published" title="2014-09-02T21:08:11.969431">2014-09-02</abbr>
+  <p>In <a href="./faq.html">FAQ</a>. </p>
+  </footer><!-- /.post-info -->
+  <p>If you have questions, comments or concerns about the F.A.Q. please
+  contact us at <a class="reference external" href="mailto:weibohit&#64;163.com">weibohit&#64;163.com</a>.</p>
+
+  <div class="section" id="is-linux-kernel-free-software">
+    <h2>Is EMF Automated Testing Lab Free Software?</h2>
+    <p>EMF Automated Testing Lab is released under GNU GPL version 2 and is therefore Free
+    Software as defined by the <a class="reference external" href="http://www.fsf.org/">Free Software Foundation</a>.
+    You may read the entire copy of the license in the file distributed with each release
+    of the EMF Automated Testing Lab.</p>
+  </div>
+
+  <div class="section" id="what-does-stable-and-canary-mean">
+    <h2>What does &quot;stable&quot; and &quot;canary&quot; mean?</h2>
+    <p>As EMF Automated Testing Lab move from the &quot;canary&quot; into the &quot;stable&quot; category, two
+    things can happen:</p>
+    <ol class="arabic simple">
+      <li>They can reach &quot;End of Life&quot; after a few bugfix revisions, which
+      means that maintainers will release no more bugfixes for this version, or</li>
+      <li>They can be put into &quot;master&quot; maintenance, which means that
+      maintainers will provide bugfixes for this revision for a
+      much longer period of time.</li>
+    </ol>
+    <p>If the EMF Automated Testing Lab version you are using is marked &quot;master,&quot; you should consider
+    upgrading to the next major version as there will be no more bugfixes
+    provided for the kernel version you are using.</p>
+    <p>Please check the <a href="./release.html">Releases</a> page for more info.</p>
+  </div>
+
+  <div class="section" id="is-there-an-rss-feed-for-the-latest-tools-version">
+    <h2>Is there an RSS feed for the latest tools version?</h2>
+    <p>No. We may support RSS feed in the future.</p>
+  </div>
+
+  <div class="section" id="can-i-get-an-owner-account-for-the-repository">
+    <h2>Can I get an owner account for the repository?</h2>
+    <p>Owner accounts are not given away very often, usually you need to
+    be making some reasonable amount of contributions to the EMF Automated
+    Testing Lab and have a good reason for wanting / needing an account. If
+    you really feel that you should have an account please e-mail the following to
+    <a class="reference external" href="mailto:blade&#64;hit.edu.cn">blade&#64;hit.edu.cn</a>:</p>
+    <ul class="simple">
+      <li>full name</li>
+      <li>desired username</li>
+      <li>reason for requiring an owner account</li>
+      <li>reference to work you've done</li>
+      <li>PGP/GPG public key fingerprint (NOT your ssh key)<ul>
+      <li>Key should be signed by as many developers as you know</li>
+      <li>Accounts will not be issued until key carries enough signatures</li>
+      <li>Key and signatures must be available on public key servers</li>
+    </ul>
+    </ul>
+    <p>The admin team will then review your request and let you know
+    the decision.</p>
+    <p>Please note that the admins reserves the right to refuse service to anyone, for any reason.</p>
+  </div>
+
+  <div class="section" id="i-have-cool-project-x-can-you-guys-mirror-it-for-me">
+    <h2>I have cool project X, can you guys mirror it for me?</h2>
+    <p>Probably not. We do not mirror individual projects, software, etc as
+    we feel there are better places providing mirrors for those kinds of
+    repositories. If you feel we should mirror your project, please contact
+    <a class="reference external" href="mailto:weibohit&#64;163.com">weibohit&#64;163.com</a> with the following information:</p>
+    <ul class="simple">
+    <li>name</li>
+    <li>project name</li>
+    <li>project website</li>
+    <li>detailed project description</li>
+    <li>reason for wanting us to mirror</li>
+    </ul>
+    <p>The admin team will then review your request and talk to you
+    about it. As with any kind of account it's up to the discretion of the admin team.</p>
+  </div>
+
+  <div class="section" id="how-does-kernel-org-provide-its-users-access-to-the-git-trees">
+    <h2>How does admins provide its users access to the git trees?</h2>
+    <p>We are using an access control system called <a class="reference external" href="https://github.com/sitaramc/gitolite/wiki">gitolite</a>, originally
+    written and maintained by Sitaram Chamarty. We chose gitolite for a
+    number of reasons:</p>
+    <ul class="simple">
+    <li>Limiting of ssh access to the system</li>
+    <li>Fine grained control over repository access</li>
+    <li>Well maintained and supported code base</li>
+    <li>Responsive development</li>
+    <li>Broad and diverse install base</li>
+    </ul>
+    <p>As well at the time of deployment the code had undergone an external
+    code review.</p>
+  </div>
+
+  <div class="section" id="when-will-the-next-stable-be-released">
+    <h2>When will the next stabe be released?</h2>
+    <p>The next stabe will be released when it is ready. There is no strict
+  timeline for making releases.
+  </div>
+
+  <div class="section" id="what-will-go-into-the-next-release">
+    <h2>What will go into the next release?</h2>
+    <p>It is hard to predict with certainty, but you can either take a peek at
+    Corbet provides a broad forecast of what will likely be included into
+    the next mainline release.</p>
+  </div>
+</article>
 {% endblock %}
