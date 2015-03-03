@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block body %}
+<h2>Server Info</h2>
+  <table id="releases">
+     <tbody>
+      <tr align="left">
+      <td><strong>Access Time</strong></td>
+      <td><strong>{{ g.server_info['access_time'] }}</strong></td>
+      </tr>
+      <tr align="left">
+      <td><strong>Architecture</strong></td>
+      <td><strong>{{ g.server_info['architecture'] }}</strong></td>
+      </tr>
+      <tr align="left">
+      <td><strong>Disk Usage</strong></td>
+      <td><strong>{{ g.server_info['disk_usage'] }}</strong></td>
+      </tr>
+      <tr align="left">
+      <td><strong>Distribution</strong></td>
+      <td><strong>{{ g.server_info['distribution'] }}</strong></td>
+      </tr>
+      <tr align="left">
+      <td><strong>Kernel</strong></td>
+      <td><strong>{{ g.server_info['kernel'] }}</strong></td>
+      </tr>
+      <tr align="left">
+      <td><strong>Virtual Memory</strong></td>
+      <td><strong>{{ g.server_info['virtual_memory'] }}</strong></td>
+      </tr>
+      <tr align="left">
+      <td><strong>Work Directory</strong></td>
+      <td><strong>{{ g.server_info['work_dir'] }}</strong></td>
+      </tr>
+     </tbody>
+  </table>
+<h2>Client Info</h2>
+  <table id="releases">
+    <tbody>
+      <tr align="left">
+      <td><strong>Browser</strong></td>
+      <td id="client_app_version"></td>
+      </tr>
+      <tr align="left">
+      <td><strong>Java Enabled</strong></td>
+      <td id="client_java_enabled"></td>
+      </tr>
+      <tr align="left">
+      <td><strong>Platform</strong></td>
+      <td id="client_platform"></td>
+      </tr>
+      <tr align="left">
+      <td><strong>Time</strong></td>
+      <td id="client_time"></td>
+      </tr>
+    </tbody>
+  </table>
+  <script>
+    var currentdate = new Date();
+    var datetime = "Last Sync: " + currentdate.getDate() + "/"
+                    + (currentdate.getMonth()+1)  + "/" 
+                    + currentdate.getFullYear() + " @ "  
+                    + ((currentdate.getHours() < 10)?"0":"") + currentdate.getHours() + ":"  
+                    + ((currentdate.getMinutes() < 10)?"0":"") + currentdate.getMinutes() + ":" 
+                    + ((currentdate.getSeconds() < 10)?"0":"") + currentdate.getSeconds();
+    document.getElementById("client_time").innerHTML = datetime;
+    document.getElementById("client_time").style.fontWeight = 'bold';
+    document.getElementById("client_app_version").innerHTML = window.navigator.userAgent;
+    document.getElementById("client_app_version").style.fontWeight = 'bold';
+    document.getElementById("client_java_enabled").innerHTML = navigator.javaEnabled();
+    document.getElementById("client_java_enabled").style.fontWeight = 'bold';
+    document.getElementById("client_platform").innerHTML = navigator.platform;
+    document.getElementById("client_platform").style.fontWeight = 'bold';
+  </script>
+{% endblock %}
