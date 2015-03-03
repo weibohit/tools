@@ -2,4 +2,74 @@
 {% block title %}Release{% endblock %}
 
 {% block body %}
+<article>
+  <h1 class="entry-title"><a href="./release.html">Active EMF Automated Testing Lab releases</a></h1>
+  <footer class="post-info">
+  <abbr class="published" title="2014-08-26T23:18:02.777042">2014-08-26</abbr>
+  <p>In <a href="./release.html">Releases</a>. </p>
+  </footer><!-- /.post-info --><p>There are several main categories into which releases may fall:</p>
+  <dl class="docutils">
+    <dt>Canary</dt>
+    <dd>Prepatch or &quot;RC&quot; are mainline pre-releases that are
+    mostly aimed at other developers and enthusiasts. They must be compiled
+    from source and usually contain new features that must be tested before
+    they can be put into a stable release.</dd>
+    <dt>Stable</dt>
+    <dd>After each canary is released, it is considered &quot;stable.&quot;
+    Any bug fixes for a stable release are backported from the mainline
+    tree and applied by a designated stable maintainer. There are usually
+    only a few bugfix releases until next mainline becomes available -- unless
+    it is designated a &quot;longterm maintenance.&quot; Stable el updates are
+    released on as-needed basis, usually 2-3 a month.</dd>
+    <dt>Longterm</dt>
+    <dd>There are usually several &quot;longterm maintenance&quot; releases
+    provided for the purposes of backporting bugfixes for older trees. Only
+    important bugfixes are applied to and they don't usually see very frequent
+    releases, especially for older trees.</dd>
+  </dl>
+
+  <table border="1" class="docutils">
+  <caption>Longterm release EMF Automated Testing Lab</caption>
+    <colgroup>
+      <col width="14%" />
+      <col width="34%" />
+      <col width="21%" />
+      <col width="31%" />
+    </colgroup>
+    <thead valign="bottom">
+    <tr>
+      <th class="head">Version</th>
+      <th class="head">Maintainer</th>
+      <th class="head">Released</th>
+      <th class="head">Projected EOL</th>
+    </tr>
+    </thead>
+    <tbody valign="top">
+    <tr>
+      <td>0.0.1</td>
+      <td>Wei Bohit</td>
+      <td>2015-03-3</td>
+      <td>March, 2018</td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="section" id="distribution-kernels">
+    <h2>Distribution</h2>
+    <p>Many distributions provide their own &quot;longterm maintenance&quot;
+    that may or may not be based on those maintained by admin developers.
+    These releases are not hosted at main reposistory and admin developers can
+    provide no support for them.</p>
+    <p>It is easy to tell if you are running a distribution. Unless you
+    downloaded, compiled and installed your own version from main reposistory,
+    you are running a distribution. To find out the version of your release,
+    run <cite>python app_main.py --version</cite>:</p>
+    <pre class="literal-block">
+    # python app_main.py --version
+    2015-03-04 00:34:22,314 Log DEBUG version 0.0.1
+    </pre>
+    <p>If you see anything at all after the dash, you are running a distribution
+    . Please use the support channels offered by your distribution
+    vendor to obtain support.</p>
+  </div>
+</article>
 {% endblock %}

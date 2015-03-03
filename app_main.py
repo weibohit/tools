@@ -73,6 +73,7 @@ def main(argv):
 
   if '--version' in argv:
     VLOG(0, opt_version)
+    sys.exit(0)
 
   if opts.opt_debug:
     if opts.opt_debug.lower() == 'false':
