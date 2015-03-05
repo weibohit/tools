@@ -12,6 +12,15 @@ body {
     color: #33290A;
 }
 
+#canvas-container {
+   width: 100%;
+   text-align:center;
+}
+
+canvas {
+   display: inline;
+}
+
 #banner {
     text-align: center;
     background: #FFFFFF;
