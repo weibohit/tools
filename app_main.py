@@ -46,6 +46,15 @@ def home_page():
 def release_page():
   return render_template('release.html')
 
+# WebGL demos entrance
+@app.route('/spin-cube.html')
+def spin_cube_page():
+  return render_template('spin-cube.html')
+
+@app.route('/plot-3d.html')
+def plot_3d_page():
+  return render_template('plot-3d.html')
+
 # for debugging layout template
 @app.route('/layout.html')
 def layout_page():
@@ -64,6 +73,7 @@ def main(argv):
   parser.add_option('--log-path', action='store', dest="opt_log_path", help='write server log to file instead of stderr, increase log level to INFO')
   parser.add_option('--verbose', action='store_false', dest="verbose", help='log verbosely')
   parser.add_option('--silent', action='store_false', dest="silent", help='log nothing')
+  parser.add_option('--unittest', action='store_false', dest="silent", help='run unit test cases during launching')
 
   if 1 > len(argv):
     parser.print_help()
@@ -95,13 +105,16 @@ def main(argv):
   try:
     app_serial = SerialImpl()
   except:
+    app_serial = None
     VLOG(3, "Failed to initialize serial port for application.")
-    sys.exit(-1)
+    # sys.exit(-1)
 
   status = Status(kOk)
-  # app_serial.ForTest()
-  # app_serial.Defaut()
-  app_serial.LoopBackTest()
+
+  if '--unittest' in argv:
+    app_serial.ForTest()
+    app_serial.Defaut()
+    app_serial.LoopBackTest()
 
   # start flask app server
   try:
@@ -113,7 +126,8 @@ def main(argv):
     pass
   finally:
     # close serial file
-    app_serial.Close()
+    if app_serial and isinstance(app_serial, SerialImpl):
+      app_serial.Close()
     # scan and make the directory tree clean every time 
     for rootdir, subdir, files in os.walk("./"):
       for item in files:
