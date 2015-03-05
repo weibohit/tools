@@ -5,9 +5,12 @@ from flask import request
 import optparse
 import os
 import sys
+import time
+from driver.serial_impl import SerialImpl
 from utility.log import InitLogging
 from utility.log import VLOG
 from utility.server_info import ServerInfo
+from utility.status import *
 
 app = Flask(__name__)
 
@@ -88,14 +91,29 @@ def main(argv):
     else:
       VLOG(0, "Invalid port selection.")
 
+  # initialize a serial object for application
   try:
-    VLOG(0, "Start application on port: http://127.0.0.1:" + opt_port)
+    app_serial = SerialImpl()
+  except:
+    VLOG(3, "Failed to initialize serial port for application.")
+    sys.exit(-1)
+
+  status = Status(kOk)
+  # app_serial.ForTest()
+  # app_serial.Defaut()
+  app_serial.LoopBackTest()
+
+  # start flask app server
+  try:
+    VLOG(1, "Start application on port: http://127.0.0.1:" + opt_port)
     app.run(debug=opt_debug)
   except KeyboardInterrupt:
     pass
   except:
     pass
   finally:
+    # close serial file
+    app_serial.Close()
     # scan and make the directory tree clean every time 
     for rootdir, subdir, files in os.walk("./"):
       for item in files:
