@@ -51,6 +51,10 @@ def release_page():
 def spin_cube_page():
   return render_template('spin-cube.html')
 
+@app.route('/plot-3d.html')
+def plot_3d_page():
+  return render_template('plot-3d.html')
+
 # for debugging layout template
 @app.route('/layout.html')
 def layout_page():

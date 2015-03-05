@@ -17,6 +17,12 @@ body {
    text-align:center;
 }
 
+#plot-container {
+   width:960px;
+   height:500px;
+   text-align:center;
+}
+
 canvas {
    display: inline;
 }
