@@ -47,6 +47,10 @@ def release_page():
   return render_template('release.html')
 
 # WebGL demos entrance
+@app.route('/support_webgl.html')
+def support_webgl_page():
+  return render_template('support_webgl.html')
+
 @app.route('/spin-cube.html')
 def spin_cube_page():
   return render_template('spin-cube.html')
