@@ -86,7 +86,7 @@
 
     var format = d3.format("+.3f");
 
-    var data = d3.csv("{{ url_for('static', filename='debugData.csv') }}", function (d) {
+    var data = d3.csv("{{ url_for('static', filename='output.csv') }}", function (d) {
 
         d.forEach(function (d,i) {
             unfiltered[i] = {

@@ -1,0 +1,317 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>{% block title %}Julia Morpher using WebGL{% endblock %}</title>
+  <link rel="icon" type="image/png" href="../static/favicon.png">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css', _external=True) }}">
+
+  <script id="shader-fs" type="x-shader/x-fragment">
+    precision mediump float;
+    varying vec2 vJuliaPosition;
+    varying vec2 vPosition;
+
+    void main(void)
+    {
+      float cx = vJuliaPosition.x;
+      float cy = vJuliaPosition.y;
+      float x = vPosition.x;
+      float y = vPosition.y;
+
+      float hue;
+      const float saturation = 0.6;
+      const float value = 1.0;
+      float hueRound;
+      int hueIndex;
+      float f;
+      float p;
+      float q;
+      float t;
+      float vel;
+      float x2 = x * x;
+      float y2 = y * y;
+
+      float tempX = 0.0;
+      int i = 60;
+      int runaway = 0;
+      for (int iter = 0; iter < 60; iter++) {
+        tempX = x2 - y2 + cx;
+        y = 2.0 * x * y + cy;
+        x = tempX;
+        x2 = x * x;
+        y2 = y * y;
+        vel = x2 + y2;
+        if (vel > 10000.0)
+        {
+          i = iter;
+          runaway = 1;
+          break;
+        }
+      }
+
+      if (runaway == 1)
+      {
+        hue = (float(i) - log(vel)/9.21) / 70.0;
+        hueRound = hue * 6.0;
+        hueIndex = int(mod(float(int(hueRound)), 6.0));
+        f = fract(hueRound);
+        p = value * (1.0 - saturation);
+        q = value * (1.0 - f * saturation);
+        t = value * (1.0 - (1.0 - f) * saturation);
+
+        if (hueIndex == 0)
+          gl_FragColor = vec4(value, t, p, 1.0);
+        else if (hueIndex == 1)
+          gl_FragColor = vec4(q, value, p, 1.0);
+        else if (hueIndex == 2)
+          gl_FragColor = vec4(p, value, t, 1.0);
+        else if (hueIndex == 3)
+          gl_FragColor = vec4(p, q, value, 1.0);
+        else if (hueIndex == 4)
+          gl_FragColor = vec4(t, p, value, 1.0);
+        else if (hueIndex == 5)
+          gl_FragColor = vec4(value, p, q, 1.0);
+
+      }
+      else
+      {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+      }
+    }
+  </script>
+
+  <script id="shader-vs" type="x-shader/x-vertex">
+    attribute vec2 aVertexPosition;
+    attribute vec2 aPlotPosition;
+    attribute vec2 aJuliaPosition;
+    varying vec2 vPosition;
+    varying vec2 vJuliaPosition;
+
+    void main(void)
+    {
+      gl_Position = vec4(aVertexPosition, 1.0, 1.0);
+      vPosition = aPlotPosition;
+      vJuliaPosition = aJuliaPosition;
+    }
+  </script>
+
+  <script type="application/x-javascript">
+    var gl;
+    function initGL(canvas)
+    {
+      try {
+        gl = canvas.getContext("experimental-webgl");
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      } catch(e) {
+      }
+      if (!gl) {
+        alert("Could not initialise WebGL, sorry :-(");
+      }
+    }
+
+    function getShader(gl, id)
+    {
+        var shaderScript = document.getElementById(id);
+        if (!shaderScript)
+            return null;
+
+        var shader;
+        if (shaderScript.type == "x-shader/x-fragment")
+        {
+            shader = gl.createShader(gl.FRAGMENT_SHADER);
+        }
+        else if (shaderScript.type == "x-shader/x-vertex")
+        {
+            shader = gl.createShader(gl.VERTEX_SHADER);
+        }
+        else
+        {
+            return null;
+        }
+
+        gl.shaderSource(shader, shaderScript.textContent);
+        gl.compileShader(shader);
+
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
+        {
+            alert(gl.getShaderInfoLog(shader));
+            return null;
+        }
+
+        return shader;
+    }
+
+    var shaderProgram;
+    var aVertexPosition;
+    function initShaders()
+    {
+      var fragmentShader = getShader(gl, "shader-fs");
+      var vertexShader = getShader(gl, "shader-vs");
+
+      shaderProgram = gl.createProgram();
+      gl.attachShader(shaderProgram, vertexShader);
+      gl.attachShader(shaderProgram, fragmentShader);
+      gl.linkProgram(shaderProgram);
+
+      if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS))
+      {
+        alert("Could not initialise shaders");
+      }
+
+      gl.useProgram(shaderProgram);
+
+      aVertexPosition = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+      gl.enableVertexAttribArray(aVertexPosition);
+
+      aPlotPosition = gl.getAttribLocation(shaderProgram, "aPlotPosition");
+      gl.enableVertexAttribArray(aPlotPosition);
+
+      aJuliaPosition = gl.getAttribLocation(shaderProgram, "aJuliaPosition");
+      gl.enableVertexAttribArray(aJuliaPosition);
+    }
+
+    var baseCorners = [
+        [ 1.7,  1.2],
+        [-1.7,  1.2],
+        [ 1.7, -1.2],
+        [-1.7, -1.2],
+    ];
+
+    var juliaPositionBuffer;
+    function initBuffers()
+    {
+      vertexPositionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
+      var vertices = [
+           1.0,  1.0,
+          -1.0,  1.0,
+           1.0, -1.0,
+          -1.0, -1.0,
+      ];
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+      gl.vertexAttribPointer(aVertexPosition, 2, gl.FLOAT, false, 0, 0);
+
+      var plotPositionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, plotPositionBuffer);
+      var cornerIx;
+      var corners = [];
+      for (cornerIx in baseCorners)
+      {
+        corners.push(baseCorners[cornerIx][0]); // x
+        corners.push(baseCorners[cornerIx][1]); // y
+      }
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(corners), gl.STATIC_DRAW);
+      gl.vertexAttribPointer(aPlotPosition, 2, gl.FLOAT, false, 0, 0);
+
+      juliaPositionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, juliaPositionBuffer);
+      gl.vertexAttribPointer(aJuliaPosition, 2, gl.FLOAT, false, 0, 0);
+    }
+
+    t = 0;
+    function drawScene()
+    {
+      var cornerIx;
+      var corners = [];
+      for (cornerIx in baseCorners)
+      {
+        tp = t + Math.sin(t * 0.27 + cornerIx * Math.PI / 2) *
+                 (Math.sin(t * 0.55) * 0.4 + 0.4);
+        corners.push(Math.sin(tp * 0.7));
+        corners.push(Math.sin(tp));
+      }
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(corners), gl.STATIC_DRAW);
+
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+
+    var timer = 0;
+
+    var canvas;
+    function webGLStart()
+    {
+      canvas = document.getElementById("canvas");
+      initGL(canvas);
+      initShaders()
+
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clearDepth(1.0);
+      initBuffers();
+    }
+
+    function flipAnim()
+    {
+      if (timer) {
+        clearInterval(timer);
+        timer = 0;
+      }
+      else {
+        timer = setInterval(animate, 15);
+      }
+    }
+
+    function animate() {
+      t += 0.01;
+      if (t > Math.PI * 200) {
+        t -= Math.PI * 200;
+      }
+      drawScene();
+    }
+
+    function resizeCanvas(w)
+    {
+      ratio = 425 / 330;
+      if (w == -1) {
+        canvas.parentNode.style.position = "absolute";
+        canvas.parentNode.style.top = 0;
+        w = canvas.parentNode.parentNode.offsetHeight * ratio;
+      }
+      else {
+        canvas.parentNode.style.position = "";
+        canvas.parentNode.style.top = "";
+      }
+      canvas.width = w;
+      canvas.height = w / ratio;
+
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      drawScene();
+    }
+
+    var resizeTimer = false;
+    function fullScreen() {
+      window.onresize = function() {
+        if (resizeTimer) {
+          clearTimeout(resizeTimer);
+        }
+        resizeTimer = setTimeout(function() {
+          fullScreen();
+        }, 100);
+      };
+
+      resizeCanvas(-1);
+    }
+
+  </script>
+</head>
+
+<body onload="webGLStart(); resizeCanvas(600);flipAnim()" style="height: 100%; margin: 0">
+  <header id="banner" class="body">
+    <div id="tux-gear"></div>
+    <h1><a href="./home.html">EM Automated Test Lab</a></h1>
+    <nav>
+      <ul>
+        <li><a href="./home.html">Home</a></li>
+        <li><a href="./about.html">About</a></li>
+        <li><a href="./contact_us.html">Contact</a></li>
+        <li><a href="./demo.html">Demos</a></li>
+        <li><a href="./faq.html">FAQ</a></li>
+        <li><a href="./release.html">Releases</a></li>
+      </ul>
+    </nav>
+  </header><!-- /#banner -->
+  <aside id="featured", class="body">
+    <div style="z-index:-1; text-align:center; width:100%;">
+      <canvas id="canvas" style="border: none;" width="425" height="330"></canvas>
+    </div>
+  </aside>
+</body>
+</html>

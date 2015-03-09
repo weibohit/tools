@@ -47,6 +47,10 @@ def release_page():
   return render_template('release.html')
 
 # WebGL demos entrance
+@app.route('/juliaanim.html')
+def juliananim_page():
+  return render_template('juliaanim.html')
+
 @app.route('/support_webgl.html')
 def support_webgl_page():
   return render_template('support_webgl.html')
