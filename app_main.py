@@ -59,6 +59,10 @@ def spin_cube_page():
 def plot_3d_page():
   return render_template('plot-3d.html')
 
+@app.route('/antenna.html')
+def antenna_page():
+  return render_template('antenna.html')
+
 # for debugging layout template
 @app.route('/layout.html')
 def layout_page():
@@ -66,9 +70,10 @@ def layout_page():
 
 ''' main entrance of application '''
 def main(argv):
+  host_ip = '0.0.0.0'
   opt_version = 'version ' + '0.0.9'
   opt_debug = True
-  opt_port = '5000'
+  opt_port = 5000
 
   parser = optparse.OptionParser()
   parser.add_option('--version', action='store_false', dest='version', help='info current version')
@@ -122,8 +127,8 @@ def main(argv):
 
   # start flask app server
   try:
-    VLOG(1, "Start application on port: http://127.0.0.1:" + opt_port)
-    app.run(debug=opt_debug)
+    VLOG(1, "Start application on port: %s:%d" % (host_ip, opt_port))
+    app.run(host=host_ip, port=opt_port, debug=opt_debug)
   except KeyboardInterrupt:
     pass
   except:
