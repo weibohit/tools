@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>San Angeles Observation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel=stylesheet type=text/css href="../static/main.css">
+    <meta charset="utf-8">
+	  <link rel="icon" type="image/png" href="../static/favicon.png">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css', _external=True) }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='webgl-utils.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='webgl-debug.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='log.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='matrix4x4.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='OESVertexArrayObject.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='demo.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='angeles.js') }}"></script>
+  </head>
+  <body onload="main()">
+    <header id="banner" class="body">
+      <div id="tux-gear"></div>
+      <h1><a href="./home.html">EM Automated Test Lab</a></h1>
+      <nav>
+        <ul>
+          <li><a href="./home.html">Home</a></li>
+          <li><a href="./about.html">About</a></li>
+          <li><a href="./contact_us.html">Contact</a></li>
+          <li><a href="./demo.html">Demos</a></li>
+          <li><a href="./faq.html">FAQ</a></li>
+          <li><a href="./release.html">Releases</a></li>
+        </ul>
+      </nav>
+    </header><!-- /#banner -->
+    <aside id="featured" class="body">
+      <div style="text-align: center">
+        <canvas id="c" style="width: 640px; height: 480px;">
+        </canvas>
+      </div>
+    </aside>
+  </body>
+</html>

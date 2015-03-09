@@ -47,6 +47,10 @@ def release_page():
   return render_template('release.html')
 
 # WebGL demos entrance
+@app.route('/san_angeles.html')
+def san_angeles_page():
+  return render_template('san_angeles.html')
+
 @app.route('/juliaanim.html')
 def juliananim_page():
   return render_template('juliaanim.html')
