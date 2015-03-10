@@ -75,6 +75,10 @@ def plot_3d_page():
 def antenna_page():
   return render_template('antenna.html')
 
+@app.route('/microstrip.html')
+def microstrip_page():
+  return render_template('microstrip.html')
+
 # for debugging layout template
 @app.route('/layout.html')
 def layout_page():
