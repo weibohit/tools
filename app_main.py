@@ -83,6 +83,10 @@ def microstrip_page():
 def microstrip_s11_page():
   return render_template('microstrip_s11.html')
 
+@app.route('/microstrip2_s11.html')
+def microstrip2_s11_page():
+  return render_template('microstrip2_s11.html')
+
 # for debugging layout template
 @app.route('/layout.html')
 def layout_page():
