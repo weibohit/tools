@@ -95,7 +95,7 @@ def layout_page():
 ''' main entrance of application '''
 def main(argv):
   host_ip = '0.0.0.0'
-  opt_version = 'version ' + '0.0.12'
+  opt_version = 'version ' + '0.0.17'
   opt_debug = True
   opt_port = 5000
 
