@@ -111,3 +111,37 @@ def LoadDataFromCST():
   fd.close()
   fd_output.close()
   return Status(kOk)
+
+def LoadS11FromCST(path):
+  if not os.path.isfile(path):
+    return Status(kUnknownError, path + " doesn't exist.")
+
+  try:
+    fd = open(path, 'r')
+  except IOError, e:
+    return Status(kUnknownError, e)
+
+  try:
+    fd_output = open('static/microstrip_s11.js', 'w+')
+  except IOError, e:
+    fd.close()
+    return Status(kUnknownError, e)
+
+  freq = []
+  db = []
+  for line in fd.readlines():
+    vector = line[:-2].split(',')
+    f = float(vector[0])
+    d = float(vector[1])
+    f = round(f, 3)
+    d = round(d, 6)
+    f_str = "{:.3f}".format(f)
+    d_str = "{:.6f}".format(d)
+    freq.append(f_str)
+    db.append(d_str)
+
+  fd_output.write("Frequency = " + str(freq) + ";\n")
+  fd_output.write("Decibel = " + str(db) + ";")
+  fd.close()
+  fd_output.close()
+  return Status(kOk)

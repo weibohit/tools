@@ -11,6 +11,10 @@ if __name__ == "__main__":
   if status.IsError():
     print status.Message()
 
+  status = file_helper.LoadS11FromCST("./static/microstrip_s11.csv")
+  if status.IsError():
+    print status.Message()
+
   for rootdir, subdir, files in os.walk("./"):
     for item in files:
       if item.endswith(".pyc"):
