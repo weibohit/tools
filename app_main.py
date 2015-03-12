@@ -46,6 +46,10 @@ def home_page():
 def release_page():
   return render_template('release.html')
 
+@app.route('/motor.html')
+def motor_page():
+  return render_template('motor.html')
+
 # WebGL demos entrance
 @app.route('/nvidia.html')
 def nvidia_page():

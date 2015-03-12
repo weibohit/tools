@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title %}Motor{% endblock %}
+
+{% block body %}
+<article>
+  <div id="canvas-container">
+    <video class='video' width="320" height="240" controls>
+      <source src="{{ url_for('static', filename='IMG_0009.ogg') }}">
+    </video>
+  </div>
+</article>
+{% endblock %}
