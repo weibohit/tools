@@ -7,12 +7,16 @@ import os
 import sys
 import time
 from driver.serial_impl import SerialImpl
+from driver.scpi import SCPI
 from utility.log import InitLogging
 from utility.log import VLOG
 from utility.server_info import ServerInfo
 from utility.status import *
 
+# global var
 app = Flask(__name__)
+app_serial = None
+app_scpi = None
 
 @app.before_request
 def server_info_init():
@@ -144,7 +148,6 @@ def main(argv):
   except:
     app_serial = None
     VLOG(3, "Failed to initialize serial port for application.")
-    # sys.exit(-1)
 
   status = Status(kOk)
 
