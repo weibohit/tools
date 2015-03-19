@@ -19,6 +19,12 @@ def ContinueSend3(ser, seconds):
 def Start(ser):
   ser.Write("{CUR20;MCS16;SPD5000;ENA;};")
 
+def Before(ser):
+  ser.Write("{CUR20;MCS16;SPD5000;STP3600;ENA;};")
+
+def Step(ser):
+  ser.Write("STP1")
+
 def Abort(ser):
   ser.Write("OFF;")
 
@@ -39,14 +45,13 @@ if __name__ == "__main__":
   # ContinueSend3(ser, 10)
   st = time.time()
   ast = time.asctime()
-  Start(ser)
-  quit = False
-  while not quit:
-    try:
-      pass
-    except KeyboardInterrupt:
-      Abort(ser)
-      quit = True
-      et = time.time()
-      aet = time.asctime()
+
+
+  Before(ser)
+  time.sleep(5)
+  Abort(ser)
+
+  # Start(ser)
+  # time.sleep(5)
+  # Abort(ser)
   ser.Close()

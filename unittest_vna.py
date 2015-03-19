@@ -9,6 +9,9 @@ class SCPI(object):
     self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.client.connect((host_ip, self.port))
 
+  def Close(self):
+    self.client.close()
+
   def Wait(self):
     self.client.send("*WAI\n")
 
@@ -48,32 +51,33 @@ class SCPI(object):
     self.client.send("CALC" + n + ":MARK" + n + ":X " + Freq + "\n")
 
   def MarkerFormat(self, n):
-    self.client.send("CALC" + n + ":MARK" + n + ":FORMat MLOG\n")
+    self.client.send("CALC" + n + ":MARK" + n + ":FORMat DEFault\n")
 
   def GetMarkerX(self, n):
     self.client.send("CALC" + n + ":MARK" + n + ":X?\n")
-    return self.client.recv(100)
+    return self.client.recv(1024)
 
   def GetMarkerY(self, n):
     self.client.send("CALC" + n + ":MARK" + n + ":Y?\n")
-    return self.client.recv(100)
+    return self.client.recv(1024)
 
 if __name__ == "__main__":
 
   vna =  SCPI("192.168.1.11")
-  vna.RST()
-  vna.CLS()
+#  vna.RST()
+#  vna.CLS()
   vna.ClearTrace('1')
   vna.CreateMeasureVar('S21', '1')
   vna.CreateTraceAssotiateWithVar('S21', '1')
-  vna.SetRange('10GHz', '15GHz', '1')
+  vna.SetRange('1GHz', '5GHz', '1')
   vna.CreateMark('1')
   vna.MarkerFormat('1')
-  vna.SetMarkFreq('1', '12GHz')
+  vna.SetMarkFreq('1', '3GHz')
+  vna.Wait()
 
   freq = vna.GetMarkerX('1')
   print freq
-
+  vna.Wait()
   db = vna.GetMarkerY('1')
   print db
 

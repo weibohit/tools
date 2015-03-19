@@ -4,6 +4,7 @@ from flask import render_template
 from flask import request
 import optparse
 import os
+import math
 import sys
 import time
 from driver.serial_impl import SerialImpl
@@ -17,10 +18,61 @@ from utility.status import *
 app = Flask(__name__)
 app_serial = None
 app_scpi = None
+is_device_idle = True
 
 @app.before_request
 def server_info_init():
   g.server_info = ServerInfo.Create()
+
+@app.route('/start_emf.html')
+def start_emf():
+#  if is_device_idle:
+  is_device_idle = False
+  # file for store
+  fd_output = open('static/start_emf.csv', 'w+')
+  fd_output.write("x,y,z,\n")
+
+  # init Motor
+  app_serial = SerialImpl()
+  # init VNA
+  app_scpi = SCPI("192.168.1.11")
+  app_scpi.RST()
+  app_scpi.CLS()
+  app_scpi.ClearTrace('1')
+  app_scpi.CreateMeasureVar('S21', '1')
+  app_scpi.CreateTraceAssotiateWithVar('S21', '1')
+  app_scpi.SetRange('10GHz', '15GHz', '1')
+  app_scpi.CreateMark('1')
+  app_scpi.MarkerFormat('1')
+  app_scpi.SetMarkFreq('1', '12GHz')
+  # power on Motor
+  # app_serial.Write("{CUR20;MCS16;SPD5000;STP3600;ENA;};")
+  # sample
+  for i in range(180):
+    src = app_scpi.GetMarkerY('1')
+    dB_str = src.split(",")[0]
+    beishu = dB_str.split("e")[0]
+    zhishu = dB_str.split("e")[1]
+    dB = float(beishu) * float(10 ** float(zhishu))
+    angle = float(i / 180.0) * math.pi
+    x = round(math.cos(angle) * dB, 9)
+    y = round(math.sin(angle) * dB, 9)
+    x_str = "{:.9f}".format(x)
+    y_str = "{:.9f}".format(y)
+    z_str = "{:.9f}".format(0.0)
+    fd_output.write(x_str + "," + y_str + "," + z_str + ",\n")
+    app_serial.Write("{CUR20;MCS16;SPD5000;STP3600;ENA;};")
+    time.sleep(1)
+  # shutdown
+  fd_output.close()
+  app_serial.Write("OFF;")
+  app_scpi.Close()
+  is_device_idle = True
+  return render_template('home.html')
+    # do the render
+#    return render_template()
+#  else:
+#    return render_template()
 
 @app.route('/')
 def home_page():
