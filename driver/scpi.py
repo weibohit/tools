@@ -50,8 +50,8 @@ class SCPI(object):
     self.client.send("CALC" + n + ":MARK" + n + ":X " + Freq + "\n")
 
   def MarkerFormat(self, n):
-    self.client.send("CALC" + n + ":MARK" + n + ":FORMat LOGPhase\n")
-    #self.client.send("CALC" + n + ":MARK" + n + ":FORMat MLOG\n")
+    #self.client.send("CALC" + n + ":MARK" + n + ":FORMat LOGPhase\n")
+    self.client.send("CALC" + n + ":MARK" + n + ":FORMat MLOG\n")
     #self.client.send("CALC" + n + ":MARK" + n + ":FORMat \n")
     pass
 

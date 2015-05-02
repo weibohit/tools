@@ -18,16 +18,65 @@ from utility.status import *
 app = Flask(__name__)
 app_serial = None
 app_scpi = None
-is_device_idle = True
+reverse = False
 
 @app.before_request
 def server_info_init():
   g.server_info = ServerInfo.Create()
 
-@app.route('/start_emf.html')
-def start_emf():
-#  if is_device_idle:
-  is_device_idle = False
+@app.route('/pre_start_emf.html')
+def pre_start_emf():
+  return render_template('pre_start_emf.html')
+
+@app.route('/start_emf_chart/<center>/<start>/<stop>')
+def start_emf_chart(center, start, stop):
+  center_freq = center + 'GHz'
+  start_freq = start + 'GHz'
+  stop_freq = stop + 'GHz'
+  # file for store
+  fd_output = open('static/real_s21.csv', 'w+')
+  fd_output.write("Freq,dB\n")
+
+  # init Motor
+  app_serial = SerialImpl()
+  # init VNA
+  app_scpi = SCPI("192.168.1.11")
+  app_scpi.RST()
+  app_scpi.CLS()
+  app_scpi.ClearTrace('1')
+  app_scpi.CreateMeasureVar('S21', '1')
+  app_scpi.CreateTraceAssotiateWithVar('S21', '1')
+  app_scpi.SetRange(start_freq, stop_freq, '1')
+  app_scpi.CreateMark('1')
+  app_scpi.MarkerFormat('1')
+  app_scpi.SetMarkFreq('1', center_freq)
+  # power on Motor
+  for i in range(180):
+    src = app_scpi.GetMarkerY('1')
+    dB_str = src.split(",")[0]
+    beishu = dB_str.split("e")[0]
+    zhishu = dB_str.split("e")[1]
+    dB = float(beishu) * float(10 ** float(zhishu))
+    dB_str = "{:.9f}".format(dB)
+    fd_output.write(str(i*2) + "," + dB_str + "\n")
+    if reverse:
+      app_serial.Write("{CUR20;MCS16;SPD5000;STP3900;ENA;};")
+    else:
+      app_serial.Write("{CUR20;MCS16;SPD5000;STP-3900;ENA;};")
+    time.sleep(1)
+  # shutdown
+  fd_output.close()
+  app_serial.Write("OFF;")
+  app_scpi.Close()
+  global reverse
+  reverse = True
+  return render_template('real_s21.html')
+
+@app.route('/start_emf/<center>/<start>/<stop>')
+def start_emf(center, start, stop):
+  center_freq = center + 'GHz'
+  start_freq = start + 'GHz'
+  stop_freq = stop + 'GHz'
   # file for store
   fd_output = open('static/start_emf.csv', 'w+')
   fd_output.write("x,y,z,\n")
@@ -41,41 +90,43 @@ def start_emf():
   app_scpi.ClearTrace('1')
   app_scpi.CreateMeasureVar('S21', '1')
   app_scpi.CreateTraceAssotiateWithVar('S21', '1')
-  app_scpi.SetRange('10GHz', '15GHz', '1')
+  app_scpi.SetRange(start_freq, stop_freq, '1')
   app_scpi.CreateMark('1')
   app_scpi.MarkerFormat('1')
-  app_scpi.SetMarkFreq('1', '12GHz')
+  app_scpi.SetMarkFreq('1', center_freq)
   # power on Motor
-  # app_serial.Write("{CUR20;MCS16;SPD5000;STP3600;ENA;};")
-  # sample
   for i in range(180):
     src = app_scpi.GetMarkerY('1')
     dB_str = src.split(",")[0]
     beishu = dB_str.split("e")[0]
     zhishu = dB_str.split("e")[1]
     dB = float(beishu) * float(10 ** float(zhishu))
-    angle = float(i / 180.0) * math.pi
+    angle = float(2 * i / 180.0) * math.pi
     x = round(math.cos(angle) * dB, 9)
     y = round(math.sin(angle) * dB, 9)
     x_str = "{:.9f}".format(x)
     y_str = "{:.9f}".format(y)
     z_str = "{:.9f}".format(0.0)
     fd_output.write(x_str + "," + y_str + "," + z_str + ",\n")
-    app_serial.Write("{CUR20;MCS16;SPD5000;STP3600;ENA;};")
+    if reverse:
+      app_serial.Write("{CUR20;MCS16;SPD5000;STP4000;ENA;};")
+    else:
+      app_serial.Write("{CUR20;MCS16;SPD5000;STP-4000;ENA;};")
     time.sleep(1)
   # shutdown
   fd_output.close()
   app_serial.Write("OFF;")
   app_scpi.Close()
-  is_device_idle = True
-  return render_template('home.html')
-    # do the render
-#    return render_template()
-#  else:
-#    return render_template()
+  global reverse
+  reverse = True
+  return render_template('start_emf_3d.html')
+
+@app.route('/real_s21')
+def real_s21():
+  return render_template('real_s21.html')
 
 @app.route('/')
-def home_page():
+def home():
   return render_template('home.html')
 
 @app.route('/about.html')

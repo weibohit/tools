@@ -1,0 +1,65 @@
+<html>
+<head>
+  <title>Microstrip Antenna S11 LineChart Plot</title>
+  <meta http-equiv="content-type" content="text/html">
+  <link rel=stylesheet type=text/css href="../static/main.css">
+  <script src="{{ url_for('static', filename='Chart.js') }}"></script>
+  <script src="{{ url_for('static', filename='d3.v3.min.js') }}"></script>
+  <script>
+  function myMain() {
+    var src_freq = new Array;
+    var src_db = new Array;
+    var format = d3.format("+.3f")
+    var i= 0
+    d3.csv("{{ url_for('static', filename='real_s21.csv') }}", function (d) {
+    d.forEach(function (d,i) {
+      src_freq[i] = +d.Freq;
+      src_db[i] = +d.dB;
+    });
+    var ctx = document.getElementById("sample").getContext("2d");
+    var data = {
+      // use frequence as x axis
+      labels: src_freq,
+      datasets: [
+        {
+          label: "My First dataset",
+          fillColor: "rgba(151,187,205,0.2)",
+          strokeColor: "rgba(151,187,205,1)",
+          pointColor: "rgba(151,187,205,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(151,187,205.1)",
+          // use gain as y axis
+          data: src_db
+        }
+      ]
+    };
+    var mychart = new Chart(ctx).Line(data);
+    });
+  }
+  </script>
+</head>
+
+<body onload="myMain()">
+  <header id="banner" class="body">
+    <div id="tux-gear"></div>
+    <h1><a href="./home.html">EM Automated Test Lab</a></h1>
+    <nav>
+      <ul>
+        <li><a href="./home.html">Home</a></li>
+        <li><a href="./about.html">About</a></li>
+        <li><a href="./contact_us.html">Contact</a></li>
+        <li><a href="./demo.html">Demos</a></li>
+        <li><a href="./faq.html">FAQ</a></li>
+        <li><a href="./release.html">Releases</a></li>
+      </ul>
+    </nav>
+  </header><!-- /#banner -->
+
+  <aside id="featured" class="body">
+    <div id="canvas-container">
+      <canvas id="sample" width="800" height="600"></canvas>
+    </div>
+  </aside>
+</body>
+</html>

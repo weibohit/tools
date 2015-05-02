@@ -20,7 +20,7 @@ def Start(ser):
   ser.Write("{CUR20;MCS16;SPD5000;ENA;};")
 
 def Before(ser):
-  ser.Write("{CUR20;MCS16;SPD5000;STP3600;ENA;};")
+  ser.Write("{CUR20;MCS16;SPD5000;STP-5000;ENA;};")
 
 def Step(ser):
   ser.Write("STP1")
@@ -47,8 +47,9 @@ if __name__ == "__main__":
   ast = time.asctime()
 
 
-  Before(ser)
-  time.sleep(5)
+  for i in range(180):
+    Before(ser)
+    time.sleep(1)
   Abort(ser)
 
   # Start(ser)

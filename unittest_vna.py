@@ -51,7 +51,8 @@ class SCPI(object):
     self.client.send("CALC" + n + ":MARK" + n + ":X " + Freq + "\n")
 
   def MarkerFormat(self, n):
-    self.client.send("CALC" + n + ":MARK" + n + ":FORMat DEFault\n")
+    #self.client.send("CALC" + n + ":MARK" + n + ":FORMat DEFault\n")
+    self.client.send("CALC" + n + ":MARK" + n + ":FORMat MLOG\n")
 
   def GetMarkerX(self, n):
     self.client.send("CALC" + n + ":MARK" + n + ":X?\n")
@@ -67,12 +68,12 @@ if __name__ == "__main__":
 #  vna.RST()
 #  vna.CLS()
   vna.ClearTrace('1')
-  vna.CreateMeasureVar('S21', '1')
-  vna.CreateTraceAssotiateWithVar('S21', '1')
-  vna.SetRange('1GHz', '5GHz', '1')
+  vna.CreateMeasureVar('S11', '1')
+  vna.CreateTraceAssotiateWithVar('S11', '1')
+  vna.SetRange('1GHz', '3GHz', '1')
   vna.CreateMark('1')
   vna.MarkerFormat('1')
-  vna.SetMarkFreq('1', '3GHz')
+  vna.SetMarkFreq('1', '2.4GHz')
   vna.Wait()
 
   freq = vna.GetMarkerX('1')
