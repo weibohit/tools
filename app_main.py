@@ -95,24 +95,35 @@ def start_emf(center, start, stop):
   app_scpi.MarkerFormat('1')
   app_scpi.SetMarkFreq('1', center_freq)
   # power on Motor
+  dB_list = []
   for i in range(180):
     src = app_scpi.GetMarkerY('1')
     dB_str = src.split(",")[0]
     beishu = dB_str.split("e")[0]
     zhishu = dB_str.split("e")[1]
     dB = float(beishu) * float(10 ** float(zhishu))
-    angle = float(2 * i / 180.0) * math.pi
-    x = round(math.cos(angle) * dB, 9)
-    y = round(math.sin(angle) * dB, 9)
-    x_str = "{:.9f}".format(x)
-    y_str = "{:.9f}".format(y)
-    z_str = "{:.9f}".format(0.0)
-    fd_output.write(x_str + "," + y_str + "," + z_str + ",\n")
+    dB_list.append(dB)
+    #angle = float(2 * i / 180.0) * math.pi
+    #x = round(math.cos(angle) * dB, 9)
+    #y = round(math.sin(angle) * dB, 9)
+    #x_str = "{:.9f}".format(x)
+    #y_str = "{:.9f}".format(y)
+    #z_str = "{:.9f}".format(0.0)
+    #fd_output.write(x_str + "," + y_str + "," + z_str + ",\n")
     if reverse:
       app_serial.Write("{CUR20;MCS16;SPD5000;STP4000;ENA;};")
     else:
       app_serial.Write("{CUR20;MCS16;SPD5000;STP-4000;ENA;};")
     time.sleep(1)
+  for i in range(180):
+    angle = float(2 * i / 180.0) * math.pi
+    x = round(math.cos(angle) * (dB_list[i] - min(dB_list)), 9)
+    y = round(math.sin(angle) * (dB_list[i] - min(dB_list)), 9)
+    x_str = "{:.9f}".format(x)
+    y_str = "{:.9f}".format(y)
+    z_str = "{:.9f}".format(0.0)
+    fd_output.write(x_str + "," + y_str + "," + z_str + ",\n")
+    
   # shutdown
   fd_output.close()
   app_serial.Write("OFF;")
@@ -124,6 +135,10 @@ def start_emf(center, start, stop):
 @app.route('/real_s21')
 def real_s21():
   return render_template('real_s21.html')
+
+@app.route('/real_s21_3d')
+def real_s21_3d():
+  return render_template('start_emf_3d.html')
 
 @app.route('/')
 def home():

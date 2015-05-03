@@ -23,12 +23,31 @@
           console.log("Invalid input frequency");
         }
       }
+      function activate_3d() {
+        var center_freq = parseFloat(document.getElementById("center").value);
+        var start_freq = parseFloat(document.getElementById("start").value);
+        var stop_freq = parseFloat(document.getElementById("stop").value);
+        if (start_freq < center_freq && center_freq < stop_freq &&
+            center_freq != NaN && start_freq != NaN && stop_freq != NaN) {
+          var new_html = "/start_emf/" + center_freq.toString() + "/" +
+              start_freq.toString() + "/" + stop_freq.toString();
+          console.log(new_html);
+          var xmlHttp = new XMLHttpRequest();
+          xmlHttp.open("GET", new_html, false);
+          xmlHttp.send();
+          window.location.href='/real_s21_3d';
+        }
+        else {
+          console.log("Invalid input frequency");
+        }
+      }
     </script>
   </head>
   <body>
     <input type="text" id="center" value="1.5G">
     <input type="text" id="start" value="1G">
     <input type="text" id="stop" value="2G">
-    <button onclick="activate()">Configure</button> 
+    <button onclick="activate()">Plot in Chart</button> 
+    <button onclick="activate_3d()">Plot in 3D</button> 
   </body>
 </html>
