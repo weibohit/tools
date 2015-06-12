@@ -54,9 +54,11 @@ def start_emf_chart(center, start, stop):
   for i in range(180):
     src = app_scpi.GetMarkerY('1')
     dB_str = src.split(",")[0]
+    print dB_str
     beishu = dB_str.split("e")[0]
     zhishu = dB_str.split("e")[1]
     dB = float(beishu) * float(10 ** float(zhishu))
+    print ">>>>>>>> ....." + str(dB)
     dB_str = "{:.9f}".format(dB)
     fd_output.write(str(i*2) + "," + dB_str + "\n")
     if reverse:
@@ -200,6 +202,14 @@ def plot_3d_page():
 @app.route('/antenna.html')
 def antenna_page():
   return render_template('antenna.html')
+
+@app.route('/wifi_s21.html')
+def wifi_page():
+  return render_template('wifi_s21.html')
+
+@app.route('/wifi_s21_3d.html')
+def wifi_s21_3d_page():
+  return render_template('wifi_s21_3d.html')
 
 @app.route('/microstrip.html')
 def microstrip_page():

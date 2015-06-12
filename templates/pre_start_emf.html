@@ -1,5 +1,10 @@
 <html>
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Configure Page</title>
+    <meta charset="utf-8">
+	  <link rel="icon" type="image/png" href="../static/favicon.png">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css', _external=True) }}">
     <script>
       function hop_over() {
         window.location.href='/real_s21';
@@ -10,7 +15,7 @@
         var stop_freq = parseFloat(document.getElementById("stop").value);
         if (start_freq < center_freq && center_freq < stop_freq &&
             center_freq != NaN && start_freq != NaN && stop_freq != NaN) {
-          var new_html = "/start_emf/" + center_freq.toString() + "/" +
+          var new_html = "/start_emf_chart/" + center_freq.toString() + "/" +
               start_freq.toString() + "/" + stop_freq.toString();
           console.log(new_html);
           var xmlHttp = new XMLHttpRequest();
@@ -43,11 +48,28 @@
       }
     </script>
   </head>
-  <body>
-    <input type="text" id="center" value="1.5G">
-    <input type="text" id="start" value="1G">
-    <input type="text" id="stop" value="2G">
-    <button onclick="activate()">Plot in Chart</button> 
-    <button onclick="activate_3d()">Plot in 3D</button> 
+  <body id="index" class="home">
+    <header id="banner" class="body">
+      <div id="tux-gear"></div>
+      <h1><a href="./home.html">EM Automated Test Lab</a></h1>
+      <nav>
+        <ul>
+          <li><a href="./home.html">Home</a></li>
+          <li><a href="./about.html">About</a></li>
+          <li><a href="./contact_us.html">Contact</a></li>
+          <li><a href="./demo.html">Demos</a></li>
+          <li><a href="./faq.html">FAQ</a></li>
+          <li><a href="./release.html">Releases</a></li>
+        </ul>
+      </nav>
+    </header><!-- /#banner -->
+
+    <aside id="featured" class="body">
+      <input type="text" id="center" value="1.5G">
+      <input type="text" id="start" value="1G">
+      <input type="text" id="stop" value="2G">
+      <button onclick="activate()">Plot in Chart</button>
+      <button onclick="activate_3d()">Plot in 3D</button>
+    </aside>
   </body>
 </html>
