@@ -32,11 +32,13 @@ class SCPI(object):
   def CreateMeasureVar(self, method, n):
     # e.g S11 ---> MeasureS11
     prefix_var = "Measure" + method;
-    self.client.send("CALCulate" + n + ":PARameter:DEFine '" + prefix_var + "'," + method + "\n")
+    self.client.send("CALCulate" + n + ":PARameter:DEFine '" + \
+        prefix_var + "'," + method + "\n")
 
   def CreateTraceAssotiateWithVar(self, method, n):
     prefix_var = "Measure" + method;
-    self.client.send("DISPlay:WINDow1:TRACe" + n + ":FEED '" + prefix_var + "'\n")
+    self.client.send("DISPlay:WINDow1:TRACe" + n + ":FEED '" + \
+        prefix_var + "'\n")
 
   def SetRange(self, start, stop, n):
     # set frequency range

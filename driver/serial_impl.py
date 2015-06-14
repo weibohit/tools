@@ -1,3 +1,5 @@
+__all__ = ["SerialImpl"]
+
 from utility.log import VLOG
 from utility.status import *
 import serial

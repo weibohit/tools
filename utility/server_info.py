@@ -1,3 +1,5 @@
+__all__ = ["ServerInfo"]
+
 import psutil
 import time
 from execute_async import ExecuteAsync

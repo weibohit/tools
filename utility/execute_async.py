@@ -1,11 +1,14 @@
+__all__ = ["ExecuteAsync"]
+
 import re
 import subprocess
 import threading
 from status import *
 
-""" since python' subprocess module does not support manual timeout setting. 
-This class binds the wanted commands and post the task to another thread which
-can be under control in timeout setting calling thread.join(timeout) """
+""" since python' subprocess module does not support manual
+timeout setting. This class binds the wanted commands and post
+the task to another thread which can be under control in timeout
+setting calling thread.join(timeout) """
 
 class ExecuteAsync(object):
 
@@ -38,15 +41,18 @@ class ExecuteAsync(object):
   def GetResponse(self):
     # handle timeout error
     if self.is_timeout:
-      msg = "%s command timed out after %s seconds" % (self.cmd, str(self.timeout))
+      msg = "%s command timed out after %s seconds" \
+          % (self.cmd, str(self.timeout))
       return (Status(kTimeout, msg), "")
-    # handle command execute shell-like error, etc. command unregconize or spelled error
+    # handle command execute shell-like error,
+    # etc. command unregconize or spelled error
     if self.stderr:
       return (Status(kUnknownError, "Failed to run %s command" % self.cmd), "")
     # handle adb execute error
     matchObj = re.search(r'error', self.stdout, re.I)
     if matchObj:
       return (Status(kUnknownError, \
-          "Failed to run %s command, detailed message: %s" % (self.cmd, self.stdout)), "")
+          "Failed to run %s command, detailed message: %s" \
+          % (self.cmd, self.stdout)), "")
     return (Status(kOk), self.stdout)
     

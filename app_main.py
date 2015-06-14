@@ -28,6 +28,9 @@ def server_info_init():
 def pre_start_emf():
   return render_template('pre_start_emf.html')
 
+# data saved in file "real_s21.csv"
+# display in Chart format
+# request "real_s21" in url to get landed
 @app.route('/start_emf_chart/<center>/<start>/<stop>')
 def start_emf_chart(center, start, stop):
   center_freq = center + 'GHz'
@@ -74,6 +77,9 @@ def start_emf_chart(center, start, stop):
   reverse = True
   return render_template('real_s21.html')
 
+# data saved in file "start_emf.csv"
+# display in 3D format
+# request "real_s21_3d" in url to get landed
 @app.route('/start_emf/<center>/<start>/<stop>')
 def start_emf(center, start, stop):
   center_freq = center + 'GHz'
@@ -236,13 +242,21 @@ def main(argv):
   opt_port = 5000
 
   parser = optparse.OptionParser()
-  parser.add_option('--version', action='store_false', dest='version', help='info current version')
-  parser.add_option('--debug', action='store', dest='opt_debug', help='enable debug mode of application')
-  parser.add_option('--port', action='store', dest='opt_port', type='int', help='enable debug mode of application')
-  parser.add_option('--log-path', action='store', dest="opt_log_path", help='write server log to file instead of stderr, increase log level to INFO')
-  parser.add_option('--verbose', action='store_false', dest="verbose", help='log verbosely')
-  parser.add_option('--silent', action='store_false', dest="silent", help='log nothing')
-  parser.add_option('--unittest', action='store_false', dest="silent", help='run unit test cases during launching')
+  parser.add_option('--version', action='store_false', dest='version', \
+      help='info current version')
+  parser.add_option('--debug', action='store', dest='opt_debug', \
+      help='enable debug mode of application')
+  parser.add_option('--port', action='store', dest='opt_port', type='int', \
+      help='enable debug mode of application')
+  parser.add_option('--log-path', action='store', dest="opt_log_path", \
+      help='write server log to file instead of stderr, \
+      increase log level to INFO')
+  parser.add_option('--verbose', action='store_false', dest="verbose", \
+      help='log verbosely')
+  parser.add_option('--silent', action='store_false', dest="silent", \
+      help='log nothing')
+  parser.add_option('--unittest', action='store_false', dest="silent", \
+      help='run unit test cases during launching')
 
   if 1 > len(argv):
     parser.print_help()

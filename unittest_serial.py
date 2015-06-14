@@ -30,13 +30,21 @@ def Abort(ser):
 
 if __name__ == "__main__":
   parser = optparse.OptionParser()
-  parser.add_option('--version', action='store_false', dest='version', help='info current version')
-  parser.add_option('--debug', action='store', dest='opt_debug', help='enable debug mode of application')
-  parser.add_option('--port', action='store', dest='opt_port', type='int', help='enable debug mode of application')
-  parser.add_option('--log-path', action='store', dest="opt_log_path", help='write server log to file instead of stderr, increase log level to INFO')
-  parser.add_option('--verbose', action='store_false', dest="verbose", help='log verbosely')
-  parser.add_option('--silent', action='store_false', dest="silent", help='log nothing')
-  parser.add_option('--unittest', action='store_false', dest="silent", help='run unit test cases during launching')
+  parser.add_option('--version', action='store_false', dest='version', \
+      help='info current version')
+  parser.add_option('--debug', action='store', dest='opt_debug', \
+      help='enable debug mode of application')
+  parser.add_option('--port', action='store', dest='opt_port', type='int', \
+      help='enable debug mode of application')
+  parser.add_option('--log-path', action='store', dest="opt_log_path", \
+      help='write server log to file instead of stderr, \
+      increase log level to INFO')
+  parser.add_option('--verbose', action='store_false', dest="verbose", \
+      help='log verbosely')
+  parser.add_option('--silent', action='store_false', dest="silent", \
+      help='log nothing')
+  parser.add_option('--unittest', action='store_false', dest="silent", \
+      help='run unit test cases during launching')
   (opts, _) = parser.parse_args()
   # log system
   InitLogging(opts)

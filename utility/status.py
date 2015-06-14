@@ -1,3 +1,29 @@
+__all__ = ["kOk", \
+           "kNoSuchSession", \
+           "kNoSuchElement", \
+           "kNoSuchFrame", \
+           "kUnknownCommand", \
+           "kStaleElementReference", \
+           "kElementNotVisible", \
+           "kInvalidElementState", \
+           "kUnknownError", \
+           "kJavaScriptError", \
+           "kXPathLookupError", \
+           "kTimeout", \
+           "kNoSuchWindow", \
+           "kInvalidCookieDomain", \
+           "kUnexpectedAlertOpen", \
+           "kNoAlertOpen", \
+           "kScriptTimeout", \
+           "kInvalidSelector", \
+           "kSessionNotCreatedException", \
+           "kXwalkNotReachable", \
+           "kNoSuchExecutionContext", \
+           "kDisconnected", \
+           "kForbidden", \
+           "kTabCrashed", \
+           "Status"]
+
 kOk = 0
 kNoSuchSession = 6
 kNoSuchElement = 7

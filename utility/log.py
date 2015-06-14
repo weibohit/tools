@@ -18,15 +18,22 @@ WARNING = 2
 ERROR = 3
 CRITICAL = 4
 
-""" InitLogging should only be invoked on main thread, aka before the http handler,
-and we only use one true logger whose name is set by "DEFAULT_LOGGER_NAME", wherever
+""" InitLogging should only be invoked on main thread,
+aka before the http handler, and we only use one true
+logger whose name is set by "DEFAULT_LOGGER_NAME", wherever
 need a log you just call VLOG(), the only logger is global scoped """
+
 def InitLogging(opts):
-  logging.addLevelName(logging.DEBUG, "\033[1;44m%s\033[1;0m" % logging.getLevelName(logging.DEBUG))
-  logging.addLevelName(logging.INFO, "\033[1;45m%s\033[1;0m" % logging.getLevelName(logging.INFO))
-  logging.addLevelName(logging.WARNING, "\033[1;41m%s\033[1;0m" % logging.getLevelName(logging.WARNING))
-  logging.addLevelName(logging.ERROR, "\033[1;41m%s\033[1;0m" % logging.getLevelName(logging.ERROR))
-  logging.addLevelName(logging.CRITICAL, "\033[1;41m%s\033[1;0m" % logging.getLevelName(logging.CRITICAL))
+  logging.addLevelName(logging.DEBUG, "\033[1;44m%s\033[1;0m" \
+      % logging.getLevelName(logging.DEBUG))
+  logging.addLevelName(logging.INFO, "\033[1;45m%s\033[1;0m" \
+      % logging.getLevelName(logging.INFO))
+  logging.addLevelName(logging.WARNING, "\033[1;41m%s\033[1;0m" \
+      % logging.getLevelName(logging.WARNING))
+  logging.addLevelName(logging.ERROR, "\033[1;41m%s\033[1;0m" \
+      % logging.getLevelName(logging.ERROR))
+  logging.addLevelName(logging.CRITICAL, "\033[1;41m%s\033[1;0m" \
+      % logging.getLevelName(logging.CRITICAL))
 
   g_level = logging.DEBUG
 
@@ -39,7 +46,8 @@ def InitLogging(opts):
   logger = logging.getLogger(DEFAULT_LOGGER_NAME)
   logger.setLevel(g_level)
   g_start_time = time.asctime()
-  g_formatter = logging.Formatter('\033[1;33m%(asctime)s\033[1;0m %(name)s %(levelname)s %(message)s')
+  g_formatter = logging.Formatter(\
+      '\033[1;33m%(asctime)s\033[1;0m %(name)s %(levelname)s %(message)s')
 
   if opts.opt_log_path:
     try:
