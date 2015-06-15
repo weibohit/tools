@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Configure Page</title>
+    <meta charset="utf-8">
+	  <link rel="icon" type="image/png" href="../static/favicon.png">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css', _external=True) }}">
+    <script>
+      function hop_over() {
+        window.location.href='/multiples';
+      }
+      function activate() {
+        var freq1 = parseFloat(document.getElementById("p1").value);
+        var freq2 = parseFloat(document.getElementById("p2").value);
+        var freq3 = parseFloat(document.getElementById("p3").value);
+        var freq4 = parseFloat(document.getElementById("p4").value);
+        var freq5 = parseFloat(document.getElementById("p5").value);
+        var freq6 = parseFloat(document.getElementById("p6").value);
+        if (freq1 != NaN && freq2 != NaN && freq3 != NaN && freq4 != NaN && freq5 != NaN && freq6 != NaN) {
+          var new_html = "/points/" + freq1.toString() + "/" +
+              freq2.toString() + "/" + freq3.toString() + "/" +
+              freq4.toString() + "/" + freq5.toString() + "/" +
+	      freq6.toString();
+          console.log(new_html);
+          var xmlHttp = new XMLHttpRequest();
+          xmlHttp.open("GET", new_html, false);
+          xmlHttp.send();
+          var timeout = 1000;
+          var t=setTimeout("hop_over()", timeout)
+        }
+        else {
+          console.log("Invalid input frequency");
+        }
+      }
+    </script>
+  </head>
+  <body id="index" class="home">
+    <header id="banner" class="body">
+      <div id="tux-gear"></div>
+      <h1><a href="./home.html">EM Automated Test Lab</a></h1>
+      <nav>
+        <ul>
+          <li><a href="./home.html">Home</a></li>
+          <li><a href="./about.html">About</a></li>
+          <li><a href="./contact_us.html">Contact</a></li>
+          <li><a href="./demo.html">Demos</a></li>
+          <li><a href="./faq.html">FAQ</a></li>
+          <li><a href="./release.html">Releases</a></li>
+        </ul>
+      </nav>
+    </header><!-- /#banner -->
+
+    <aside id="featured" class="body">
+      <p><B> The Button "Start Multi-Points Measurement" will continuously
+      test the following 6 interested frequency points </B></p>
+      <p> 1st Interested Frequency <input type="text" id="p1" value="1.5G"> </p>
+      <p> 2nd Interested Frequency <input type="text" id="p2" value="1G"> </p>
+      <p> 3rd Interested Frequency <input type="text" id="p3" value="2.5G"> </p>
+      <p> 4th Interested Frequency <input type="text" id="p4" value="3G"> </p>
+      <p> 5th Interested Frequency <input type="text" id="p5" value="3.5G"> </p>
+      <p> 6th Interested Frequency <input type="text" id="p6" value="4G"> </p>
+      <p> <button onclick="activate()">Start Multi-Points Measurement</button> </p>
+    </aside>
+  </body>
+</html>

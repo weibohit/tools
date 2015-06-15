@@ -24,9 +24,99 @@ reverse = False
 def server_info_init():
   g.server_info = ServerInfo.Create()
 
+@app.route('/multiples')
+def multiples():
+  return render_template('multiple_done.html')
+
+@app.route('/multiple.html')
+def multiple():
+  return render_template('multiple.html')
+
 @app.route('/pre_start_emf.html')
 def pre_start_emf():
   return render_template('pre_start_emf.html')
+
+# multiple data process, current support 6 points
+# data will be saved as "multi-2.5G.csv" like
+@app.route('/points/<f1>/<f2>/<f3>/<f4>/<f5>/<f6>')
+def multiple_points_emf(f1, f2, f3, f4, f5, f6):
+  # check the validation of fn
+  plist = []
+  try:
+    if 0.04 < float(f1) and float(f1) < 20:
+      plist.append(float(f1))
+  except:
+    VLOG(0, "invalid interested frequency points" + f1)
+  try:
+    if 0.04 < float(f2) and float(f2) < 20:
+      plist.append(float(f2))
+  except:
+    VLOG(0, "invalid interested frequency points" + f2)
+  try:
+    if 0.04 < float(f3) and float(f3) < 20:
+      plist.append(float(f3))
+  except:
+    VLOG(0, "invalid interested frequency points" + f3)
+  try:
+    if 0.04 < float(f4) and float(f4) < 20:
+      plist.append(float(f4))
+  except:
+    VLOG(0, "invalid interested frequency points" + f4)
+  try:
+    if 0.04 < float(f5) and float(f5) < 20:
+      plist.append(float(f5))
+  except:
+    VLOG(0, "invalid interested frequency points" + f5)
+  try:
+    if 0.04 < float(f6) and float(f6) < 20:
+      plist.append(float(f6))
+  except:
+    VLOG(0, "invalid interested frequency points" + f6)
+  VLOG(0, "current valid interested frequency points" + str(plist))
+  # loop for the items of plist
+  for item in plist:
+    # file for store
+    time_tag = time.strftime("%Y%m%d-%H:%M%p", time.localtime())
+    file_name = "static/multi-" + time_tag + '-' + str(item) + "G.csv"
+    fd_output = open(file_name, 'w+')
+    fd_output.write("Freq=" + str(item) + "G,dB\n")
+
+    # init Motor
+    app_serial = SerialImpl()
+    # init VNA
+    app_scpi = SCPI("192.168.1.11")
+    app_scpi.RST()
+    app_scpi.CLS()
+    app_scpi.ClearTrace('1')
+    app_scpi.CreateMeasureVar('S21', '1')
+    app_scpi.CreateTraceAssotiateWithVar('S21', '1')
+    app_scpi.SetRange('0.045GHz', '19.95GHz', '1')
+    app_scpi.CreateMark('1')
+    app_scpi.MarkerFormat('1')
+    app_scpi.SetMarkFreq('1', str(item) + 'GHz')
+    # power on Motor
+    for i in range(180):
+      src = app_scpi.GetMarkerY('1')
+      dB_str = src.split(",")[0]
+      print dB_str
+      beishu = dB_str.split("e")[0]
+      zhishu = dB_str.split("e")[1]
+      dB = float(beishu) * float(10 ** float(zhishu))
+      print ">>>>>>>> ....." + str(dB)
+      dB_str = "{:.9f}".format(dB)
+      fd_output.write(str(i*2) + "," + dB_str + "\n")
+      if reverse:
+        app_serial.Write("{CUR20;MCS16;SPD5000;STP3900;ENA;};")
+      else:
+        app_serial.Write("{CUR20;MCS16;SPD5000;STP-3900;ENA;};")
+      time.sleep(1)
+    # shutdown
+    fd_output.close()
+    app_serial.Write("OFF;")
+    app_scpi.Close()
+    global reverse
+    reverse = True
+  return render_template('multiple_done.html')
 
 # data saved in file "real_s21.csv"
 # display in Chart format

@@ -3,6 +3,7 @@ __all__ = ["PlotManager"]
 import os
 import math
 import matplotlib.pyplot as plt
+import pylab
 from utility.log import VLOG
 #import Tkinter
 
@@ -31,13 +32,14 @@ class PlotManager(object):
       try:
         int(token[0])
       except:
+        legend_label = token[0]
         continue
       if float(token[1]) > PlotManager.minor_threshold:
         x.append(int(token[0]))
         y.append(float(token[1]))
     fd.close()
     plt.figure(figsize=(10, 10))
-    plt.plot(x[1:], y[1:], linewidth=2.0, color='b')
+    plt.plot(x[1:], y[1:], label=legend_label, linewidth=2.0, color='b')
     plt.xlabel('Current Theta Angle')
     plt.ylabel('S21 Gain in Decibel')
     plt.title('Antenna S21 2D Plot')
@@ -47,6 +49,8 @@ class PlotManager(object):
     plt.minorticks_on()
     # should not block multiple figure draw
     plt.draw()
+    # add legend for plot
+    plt.legend(loc='upper right')
 
   @staticmethod
   def MultiScatter(path_list):
@@ -71,15 +75,18 @@ class PlotManager(object):
         try:
           int(token[0])
         except:
+          legend_label = token[0]
           continue
         if float(token[1]) > PlotManager.minor_threshold:
           x.append(int(token[0]))
           y.append(float(token[1]))
       fd.close()
-      plt.plot(x, y, linewidth=2.0, color=color_pool[color_index])
+      plt.plot(x, y, linewidth=2.0, label=legend_label, color=color_pool[color_index])
       color_index += 1
       # should not block multiple figure draw
       plt.draw()
+    # add legend for plot
+    plt.legend(loc='upper right')
 
   @staticmethod
   def ShareScatter(path_list):
@@ -106,15 +113,20 @@ class PlotManager(object):
         try:
           int(token[0])
         except:
+          legend_label = token[0]
           continue
         if float(token[1]) > PlotManager.minor_threshold:
           x.append(int(token[0]))
           y.append(float(token[1]))
       fd.close()
-      plt.plot(x, y, linewidth=2.0, color=color_pool[color_index])
+      plt.plot(x, y, linewidth=2.0, label=legend_label, color=color_pool[color_index])
       color_index += 1
       # should not block multiple figure draw
       plt.draw()
+      # add legend for plot
+      plt.legend(loc='upper right')
+      legend_text = plt.gca().get_legend().get_texts()
+      plt.setp(legend_text, fontsize='small')
 
   @staticmethod
   def Polar(path):
@@ -234,14 +246,15 @@ class PlotManager(object):
       try:
         int(token[0])
       except:
+        legend_label = token[0]
         continue
       if float(token[1]) > PlotManager.minor_threshold:
         x.append(int(token[0]))
         y.append(float(token[1]))
     fd.close()
     plt.figure(figsize=(10, 10))
-    plt.gca().set_axis_bgcolor('red')
-    plt.bar(x, y, alpha=1, width=1.8, align='center', color='w')
+    plt.gca().set_axis_bgcolor('blue')
+    plt.bar(x, y, alpha=1, width=1.8, label=legend_label, align='center', color='w')
     plt.xlabel('Current Theta Angle')
     plt.ylabel('S21 Gain in Decibel')
     plt.axis([min(x), max(x), min(y), max(y) + 3])
@@ -249,6 +262,8 @@ class PlotManager(object):
     plt.grid(False)
     # should not block multiple figure draw
     plt.draw()
+    # add legend for plot
+    plt.legend(loc='upper right')
 
   @staticmethod
   def ShareBar(path_list):
@@ -271,12 +286,13 @@ class PlotManager(object):
         try:
           int(token[0])
         except:
+          legend_label = token[0]
           continue
         if float(token[1]) > PlotManager.minor_threshold:
           x.append(int(token[0]))
           y.append(float(token[1]))
       fd.close()
-      plt.bar(x, y, alpha=1, width=1.8, align='center', color='w')
+      plt.bar(x, y, alpha=1, width=1.8, label=legend_label, align='center', color='w')
       plt.xlabel('Current Theta Angle', fontsize=10)
       plt.ylabel('S21 Gain in Decibel', fontsize=10)
       plt.axis([min(x), max(x), min(y), max(y) + 3])
@@ -284,3 +300,7 @@ class PlotManager(object):
       plt.grid(False)
       # should not block multiple figure draw
       plt.draw()
+      # add legend for plot
+      plt.legend(loc='upper right')
+      legend_text = plt.gca().get_legend().get_texts()
+      plt.setp(legend_text, fontsize='small')
