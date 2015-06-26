@@ -66,7 +66,7 @@ class SCPI(object):
 
 if __name__ == "__main__":
 
-  vna =  SCPI("192.168.1.11")
+  vna =  SCPI("192.168.0.11")
 #  vna.RST()
 #  vna.CLS()
   vna.ClearTrace('1')

@@ -149,8 +149,11 @@ class PlotManager(object):
         y.append(float(token[1]))
     fd.close()
     # rebase the minor value to be zero
+    print "min of db: %s" % str(min(y)) 
+    print "size of db: %d" % len(y)
+    bias = 1.5 * min(y)
     for i in range(len(x)):
-      y[i] = y[i] - min(y)
+      y[i] = y[i] - bias
       x[i] = float(x[i]) * math.pi / 180.0
     plt.plot(x, y, linewidth=2.0, color='b')
     plt.title('Antenna S21 Polar Plot')
@@ -183,9 +186,10 @@ class PlotManager(object):
           x.append(int(token[0]))
           y.append(float(token[1]))
       fd.close()
+      bias = 1.5 * min(y)
       # rebase the minor value to be zero
       for i in range(len(x)):
-        y[i] = y[i] - min(y)
+        y[i] = y[i] - bias
         x[i] = float(x[i]) * math.pi / 180.0
       plt.plot(x, y, linewidth=2.0, color=color_pool[color_index])
       color_index += 1
@@ -225,8 +229,9 @@ class PlotManager(object):
           y.append(float(token[1]))
       fd.close()
       # rebase the minor value to be zero
+      bias = 1.5 * min(y)
       for i in range(len(x)):
-        y[i] = y[i] - min(y)
+        y[i] = y[i] - bias
         x[i] = float(x[i]) * math.pi / 180.0
       plt.plot(x, y, linewidth=2.0, color=color_pool[color_index])
       color_index += 1

@@ -84,7 +84,7 @@ def multiple_points_emf(f1, f2, f3, f4, f5, f6):
     # init Motor
     app_serial = SerialImpl()
     # init VNA
-    app_scpi = SCPI("192.168.1.11")
+    app_scpi = SCPI("192.168.0.11")
     app_scpi.RST()
     app_scpi.CLS()
     app_scpi.ClearTrace('1')
@@ -94,6 +94,7 @@ def multiple_points_emf(f1, f2, f3, f4, f5, f6):
     app_scpi.CreateMark('1')
     app_scpi.MarkerFormat('1')
     app_scpi.SetMarkFreq('1', str(item) + 'GHz')
+    app_scpi.GetMarkerY('1')
     # power on Motor
     for i in range(180):
       src = app_scpi.GetMarkerY('1')
@@ -106,16 +107,16 @@ def multiple_points_emf(f1, f2, f3, f4, f5, f6):
       dB_str = "{:.9f}".format(dB)
       fd_output.write(str(i*2) + "," + dB_str + "\n")
       if reverse:
-        app_serial.Write("{CUR20;MCS16;SPD5000;STP3900;ENA;};")
+        app_serial.Write("{CUR20;MCS16;SPD5000;STP4280;ENA;};")
       else:
-        app_serial.Write("{CUR20;MCS16;SPD5000;STP-3900;ENA;};")
+        app_serial.Write("{CUR20;MCS16;SPD5000;STP-4280;ENA;};")
       time.sleep(1)
     # shutdown
     fd_output.close()
     app_serial.Write("OFF;")
     app_scpi.Close()
     global reverse
-    reverse = True
+    reverse = not reverse
   return render_template('multiple_done.html')
 
 # data saved in file "real_s21.csv"
@@ -133,7 +134,7 @@ def start_emf_chart(center, start, stop):
   # init Motor
   app_serial = SerialImpl()
   # init VNA
-  app_scpi = SCPI("192.168.1.11")
+  app_scpi = SCPI("192.168.0.11")
   app_scpi.RST()
   app_scpi.CLS()
   app_scpi.ClearTrace('1')
@@ -144,6 +145,7 @@ def start_emf_chart(center, start, stop):
   app_scpi.MarkerFormat('1')
   app_scpi.SetMarkFreq('1', center_freq)
   # power on Motor
+  app_scpi.GetMarkerY('1')
   for i in range(180):
     src = app_scpi.GetMarkerY('1')
     dB_str = src.split(",")[0]
@@ -155,16 +157,16 @@ def start_emf_chart(center, start, stop):
     dB_str = "{:.9f}".format(dB)
     fd_output.write(str(i*2) + "," + dB_str + "\n")
     if reverse:
-      app_serial.Write("{CUR20;MCS16;SPD5000;STP3900;ENA;};")
+      app_serial.Write("{CUR20;MCS16;SPD5000;STP4280;ENA;};")
     else:
-      app_serial.Write("{CUR20;MCS16;SPD5000;STP-3900;ENA;};")
+      app_serial.Write("{CUR20;MCS16;SPD5000;STP-4280;ENA;};")
     time.sleep(1)
   # shutdown
   fd_output.close()
   app_serial.Write("OFF;")
   app_scpi.Close()
   global reverse
-  reverse = True
+  reverse = not reverse
   return render_template('real_s21.html')
 
 # data saved in file "start_emf.csv"
@@ -182,7 +184,7 @@ def start_emf(center, start, stop):
   # init Motor
   app_serial = SerialImpl()
   # init VNA
-  app_scpi = SCPI("192.168.1.11")
+  app_scpi = SCPI("192.168.0.11")
   app_scpi.RST()
   app_scpi.CLS()
   app_scpi.ClearTrace('1')
@@ -192,6 +194,7 @@ def start_emf(center, start, stop):
   app_scpi.CreateMark('1')
   app_scpi.MarkerFormat('1')
   app_scpi.SetMarkFreq('1', center_freq)
+  app_scpi.GetMarkerY('1')
   # power on Motor
   dB_list = []
   for i in range(180):
@@ -209,9 +212,9 @@ def start_emf(center, start, stop):
     #z_str = "{:.9f}".format(0.0)
     #fd_output.write(x_str + "," + y_str + "," + z_str + ",\n")
     if reverse:
-      app_serial.Write("{CUR20;MCS16;SPD5000;STP4000;ENA;};")
+      app_serial.Write("{CUR20;MCS16;SPD5000;STP4280;ENA;};")
     else:
-      app_serial.Write("{CUR20;MCS16;SPD5000;STP-4000;ENA;};")
+      app_serial.Write("{CUR20;MCS16;SPD5000;STP-4280;ENA;};")
     time.sleep(1)
   for i in range(180):
     angle = float(2 * i / 180.0) * math.pi
@@ -227,7 +230,7 @@ def start_emf(center, start, stop):
   app_serial.Write("OFF;")
   app_scpi.Close()
   global reverse
-  reverse = True
+  reverse = not reverse
   return render_template('start_emf_3d.html')
 
 @app.route('/real_s21')
