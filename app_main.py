@@ -203,7 +203,9 @@ def start_emf(center, start, stop):
     beishu = dB_str.split("e")[0]
     zhishu = dB_str.split("e")[1]
     dB = float(beishu) * float(10 ** float(zhishu))
-    dB_list.append(dB)
+    # avoid the wrong data
+    if dB > -100.0:
+      dB_list.append(dB)
     #angle = float(2 * i / 180.0) * math.pi
     #x = round(math.cos(angle) * dB, 9)
     #y = round(math.sin(angle) * dB, 9)
@@ -216,10 +218,10 @@ def start_emf(center, start, stop):
     else:
       app_serial.Write("{CUR20;MCS16;SPD5000;STP-4280;ENA;};")
     time.sleep(1)
-  for i in range(180):
+  for i in range(len(dB_list)):
     angle = float(2 * i / 180.0) * math.pi
-    x = round(math.cos(angle) * (dB_list[i] - min(dB_list)), 9)
-    y = round(math.sin(angle) * (dB_list[i] - min(dB_list)), 9)
+    x = round(math.cos(angle) * (dB_list[i] - 1.5 * min(dB_list)), 9)
+    y = round(math.sin(angle) * (dB_list[i] - 1.5 * min(dB_list)), 9)
     x_str = "{:.9f}".format(x)
     y_str = "{:.9f}".format(y)
     z_str = "{:.9f}".format(0.0)
